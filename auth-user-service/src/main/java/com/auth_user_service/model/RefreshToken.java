@@ -16,11 +16,19 @@ import java.time.Instant;
 @Builder
 public class RefreshToken {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) private Long id;
-    @Column(unique = true) private String token;
-    private Instant expiresAt;
+    @GeneratedValue(strategy = GenerationType.IDENTITY) 
+    private Long id;
+    
+    @Column(unique = true) 
+    private String token;
+    
+    @Column(name = "user_id")
+    private Long userId;
+    
+    @Column(name = "expiry_date")
+    private Instant expiryDate;
+    
     private boolean revoked = false;
     private String deviceId;
-    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "user_id") private User user;
     private Instant createdAt = Instant.now();
 }

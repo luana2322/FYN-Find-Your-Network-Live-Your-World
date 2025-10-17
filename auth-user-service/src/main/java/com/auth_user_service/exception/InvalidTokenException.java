@@ -1,4 +1,11 @@
 package com.auth_user_service.exception;
 
-public class InvalidTokenException {
+public class InvalidTokenException extends RuntimeException {
+    public InvalidTokenException(String message) {
+        super(message);
+    }
+    
+    public InvalidTokenException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }
