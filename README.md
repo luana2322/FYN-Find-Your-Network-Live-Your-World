@@ -1,17 +1,14 @@
-# FYN-Find-Your-Network-Live-Your-World
+
+**Project Name:** FYN-Find-Your-Network-Live-Your-World
 FYN is a social media app where users can share short videos, chat in real time, and join fitness or lifestyle communities.
 Dưới đây là phiên bản README với ngôn ngữ tiếng Anh và sử dụng các tag trong file README để các chữ đẹp hơn:
 
-**README**
-================
-
-**Project Name:** Social Network Multi-Platform Based on Microservices Architecture
 --------------------------------------------------------
 
 **Introduction**
 ===============
 
-This project aims to build a multi-platform social network based on the microservices architecture. The social network will provide features such as user registration, login, viewing posts and reels, real-time chat,... This project utilizes modern technologies like Java (Spring Boot), Python (FastAPI) and PostgreSQL.
+This project aims to build a multi-platform social network based on the microservices architecture. The social network will provide features such as user registration, login, viewing posts and reels, real-time chat,... This project utilizes modern technologies like Java (Spring Boot), Python (FastAPI) và PostgreSQL.
 
 **System Description**
 =====================
@@ -21,47 +18,51 @@ The social network system is divided into independent services:
 1. **Auth Service**
 -----------------
 
-	* User Management:
-		+ Registration
-		+ Login
-		+ Forgot Password
-		+ OTP Verification (Optional)
+	* Tác vụ:
+		+ Registration: tạo mới tài khoản người dùng
+		+ Login: xác thực tài khoản người dùng
+		+ Forgot Password: gửi lại mật khẩu cho người dùng
+		+ OTP Verification (Optional): xác thực mã OTP
 	* Technology Stack: Java (Spring Boot), PostgreSQL
+
 2. **UserService**
 ------------------
 
-	* User Profile Management:
-		+ Update Profile
-		+ Search Users
-		+ Follow/Unfollow Users
+	* Tác vụ:
+		+ Update Profile: cập nhật thông tin hồ sơ người dùng
+		+ Search Users: tìm kiếm người dùng
+		+ Follow/Unfollow Users: theo dõi hoặc bỏ theo dõi người dùng khác
 	* Technology Stack: Java (Spring Boot), PostgreSQL
+
 3. **PostService**
 -----------------
 
-	* Post Management:
-		+ Create New Post
-		+ Edit Post
-		+ Delete Post
-		+ View Feed Posts
-		+ Add Comments and Likes for Posts
+	* Tác vụ:
+		+ Create New Post: tạo mới bài viết
+		+ Edit Post: chỉnh sửa bài viết
+		+ Delete Post: xóa bài viết
+		+ View Feed Posts: xem feed bài viết
+		+ Add Comments and Likes for Posts: thêm bình luận và like cho bài viết
 	* Technology Stack: Java (Spring Boot), PostgreSQL
+
 4. **ReelService**
 ------------------
 
-	* Reel Management:
-		+ Create New Reel
-		+ Edit Reel
-		+ Delete Reel
-		+ View Feed Reels
-		+ Add Comments and Likes for Reels
+	* Tác vụ:
+		+ Create New Reel: tạo mới reel
+		+ Edit Reel: chỉnh sửa reel
+		+ Delete Reel: xóa reel
+		+ View Feed Reels: xem feed reel
+		+ Add Comments and Likes for Reels: thêm bình luận và like cho reel
 	* Technology Stack: Java (Spring Boot), PostgreSQL
+
 5. **ChatService**
 ------------------
 
-	* Real-time Chat:
-		+ Send Text Messages and Linked Posts/Reels
-		+ Receive Text Messages and Linked Posts/Reels
-		+ Save Conversation History
+	* Tác vụ:
+		+ Send Text Messages and Linked Posts/Reels: gửi tin nhắn văn bản và liên kết bài viết/reel
+		+ Receive Text Messages and Linked Posts/Reels: nhận tin nhắn văn bản và liên kết bài viết/reel
+		+ Save Conversation History: lưu lịch sử trò chuyện
 	* Technology Stack: Python (FastAPI), PostgreSQL
 
 **Key Features**
