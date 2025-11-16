@@ -1,16 +1,14 @@
 package com.auth_user_service.service.impl;
 
-import com.auth_user_service.exception.BusinessLogicException;
-import com.auth_user_service.exception.ResourceNotFoundException;
+
+import com.auth_user_service.dto.follow.FollowResponse;
 import com.auth_user_service.model.Follow;
 import com.auth_user_service.model.User;
 import com.auth_user_service.repository.FollowRepository;
 import com.auth_user_service.repository.UserRepository;
 import com.auth_user_service.service.FollowService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,81 +17,56 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class FollowServiceImpl implements FollowService {
 
-    private final FollowRepository followRepository;
     private final UserRepository userRepository;
+    private final FollowRepository followRepository;
 
     @Override
-    @Transactional
-    public void followUser(Authentication authentication, Long followeeId) {
-        String email = authentication.getName();
-        User follower = userRepository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException("User", "email", email));
-        
-        User followee = userRepository.findById(followeeId)
-                .orElseThrow(() -> new ResourceNotFoundException("User", "id", followeeId));
-
-        if (follower.getId().equals(followeeId)) {
-            throw new BusinessLogicException("Cannot follow yourself");
-        }
-
-        // Check if already following
-        if (followRepository.existsByFollowerIdAndFolloweeId(follower.getId(), followeeId)) {
-            throw new BusinessLogicException("Already following this user");
-        }
-
-        Follow follow = Follow.builder()
-                .followerId(follower.getId())
-                .followeeId(followeeId)
-                .build();
-
-        followRepository.save(follow);
+    public void follow(Long followerId, Long followingId) {
+        if(followerId.equals(followingId)) throw new RuntimeException("Cannot follow yourself");
+        User follower = userRepository.findById(followerId)
+                .orElseThrow(() -> new RuntimeException("Follower not found"));
+        User following = userRepository.findById(followingId)
+                .orElseThrow(() -> new RuntimeException("Following not found"));
+        if(followRepository.findByFollowerAndFollowing(follower, following).isPresent()) return;
+        Follow f = Follow.builder().follower(follower).following(following).build();
+        followRepository.save(f);
     }
 
     @Override
-    @Transactional
-    public void unfollowUser(Authentication authentication, Long followeeId) {
-        String email = authentication.getName();
-        User follower = userRepository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException("User", "email", email));
-
-        Follow follow = followRepository.findByFollowerIdAndFolloweeId(follower.getId(), followeeId)
-                .orElseThrow(() -> new BusinessLogicException("Not following this user"));
-
-        followRepository.delete(follow);
+    public void unfollow(Long followerId, Long followingId) {
+        User follower = userRepository.findById(followerId)
+                .orElseThrow(() -> new RuntimeException("Follower not found"));
+        User following = userRepository.findById(followingId)
+                .orElseThrow(() -> new RuntimeException("Following not found"));
+        followRepository.findByFollowerAndFollowing(follower, following)
+                .ifPresent(followRepository::delete);
     }
 
     @Override
-    public List<Long> getFollowers(Long userId) {
-        return followRepository.findByFolloweeId(userId)
+    public List<FollowResponse> listFollowers(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        return followRepository.findByFollowing(user)
                 .stream()
-                .map(Follow::getFollowerId)
-                .collect(Collectors.toList());
+                .map(f -> {
+                    FollowResponse r = new FollowResponse();
+                    r.setFollowerId(f.getFollower().getId());
+                    r.setFollowingId(f.getFollowing().getId());
+                    return r;
+                }).collect(Collectors.toList());
     }
 
     @Override
-    public List<Long> getFollowing(Long userId) {
-        return followRepository.findByFollowerId(userId)
+    public List<FollowResponse> listFollowing(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        return followRepository.findByFollower(user)
                 .stream()
-                .map(Follow::getFolloweeId)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public boolean isFollowing(Authentication authentication, Long followeeId) {
-        String email = authentication.getName();
-        User follower = userRepository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException("User", "email", email));
-
-        return followRepository.existsByFollowerIdAndFolloweeId(follower.getId(), followeeId);
-    }
-
-    @Override
-    public int getFollowersCount(Long userId) {
-        return followRepository.countByFolloweeId(userId);
-    }
-
-    @Override
-    public int getFollowingCount(Long userId) {
-        return followRepository.countByFollowerId(userId);
+                .map(f -> {
+                    FollowResponse r = new FollowResponse();
+                    r.setFollowerId(f.getFollower().getId());
+                    r.setFollowingId(f.getFollowing().getId());
+                    return r;
+                }).collect(Collectors.toList());
     }
 }

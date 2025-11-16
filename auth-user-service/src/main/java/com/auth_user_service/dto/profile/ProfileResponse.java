@@ -1,15 +1,15 @@
-package com.auth_user_service.dto;
+package com.auth_user_service.dto.profile;
 
-import lombok.Builder;
+
 import lombok.Data;
 
 @Data
-@Builder
-public class UserResponse {
+public class ProfileResponse {
     private Long id;
     private String username;
     private String email;
     private String phone;
-    private String avatarUrl;
+    private String fullName;
     private String bio;
+    private String avatarUrl;
 }
