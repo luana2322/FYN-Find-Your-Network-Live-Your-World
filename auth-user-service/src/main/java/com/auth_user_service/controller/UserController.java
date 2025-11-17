@@ -6,6 +6,7 @@ import com.auth_user_service.service.UserService;
 import com.auth_user_service.util.ResponseUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -16,8 +17,8 @@ import java.util.List;
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class UserController {
-
-    private final UserService userService;
+    @Autowired
+    private UserService userService;
 
     @GetMapping("/profile")
     public ResponseEntity<?> getCurrentUserProfile(Authentication authentication) {

@@ -1,8 +1,10 @@
-
-**Project Name:** FYN-Find-Your-Network-Live-Your-World
+# FYN-Find-Your-Network-Live-Your-World
 FYN is a social media app where users can share short videos, chat in real time, and join fitness or lifestyle communities.
 Dưới đây là phiên bản README với ngôn ngữ tiếng Anh và sử dụng các tag trong file README để các chữ đẹp hơn:
 
+
+
+**Project Name:** Social Network Multi-Platform Based on Microservices Architecture
 --------------------------------------------------------
 
 **Introduction**

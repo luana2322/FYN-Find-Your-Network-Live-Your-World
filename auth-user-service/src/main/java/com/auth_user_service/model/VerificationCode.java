@@ -9,49 +9,52 @@ import lombok.NoArgsConstructor;
 import java.time.Instant;
 
 /**
- * Entity for storing refresh tokens.
- * Refresh tokens are long-lived tokens used to obtain new access tokens.
+ * Entity for storing email verification codes and password reset codes.
+ * Replaces Redis-based OTP storage with database persistence.
  */
 @Entity
-@Table(name = "refresh_tokens", indexes = {
-    @Index(name = "idx_token", columnList = "token", unique = true),
-    @Index(name = "idx_user_id", columnList = "userId"),
+@Table(name = "verification_codes", indexes = {
+    @Index(name = "idx_email", columnList = "email"),
+    @Index(name = "idx_code", columnList = "code"),
     @Index(name = "idx_expiry", columnList = "expiryDate")
 })
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class RefreshToken {
+public class VerificationCode {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false, length = 500)
-    private String token;
+    @Column(nullable = false)
+    private String email;
 
-    @Column(name = "userId", nullable = false)
-    private Long userId;
+    @Column(nullable = false, length = 10)
+    private String code;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId", insertable = false, updatable = false)
-    private User user;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private CodeType type;
 
     @Column(nullable = false)
     private Instant expiryDate;
 
     @Column(nullable = false)
-    private boolean revoked = false;
-
-    private String deviceId;
+    private boolean used = false;
 
     @Column(nullable = false, updatable = false)
     private Instant createdAt;
 
     /**
-     * Automatically set createdAt on entity creation
+     * Type of verification code
      */
+    public enum CodeType {
+        EMAIL_VERIFICATION,
+        PASSWORD_RESET
+    }
+
     @PrePersist
     protected void onCreate() {
         if (createdAt == null) {
@@ -60,16 +63,16 @@ public class RefreshToken {
     }
 
     /**
-     * Check if the refresh token has expired
+     * Check if the verification code has expired
      */
     public boolean isExpired() {
         return Instant.now().isAfter(expiryDate);
     }
 
     /**
-     * Check if the refresh token is valid (not expired and not revoked)
+     * Check if the verification code is valid (not expired and not used)
      */
     public boolean isValid() {
-        return !revoked && !isExpired();
+        return !used && !isExpired();
     }
 }

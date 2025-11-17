@@ -3,6 +3,7 @@ package com.auth_user_service.controller;
 import com.auth_user_service.service.FollowService;
 import com.auth_user_service.util.ResponseUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -15,8 +16,8 @@ import java.util.Map;
 @RequestMapping("/api/follows")
 @RequiredArgsConstructor
 public class FollowController {
-
-    private final FollowService followService;
+    @Autowired
+    private  FollowService followService;
 
     @PostMapping("/{followeeId}")
     public ResponseEntity<?> followUser(Authentication authentication, @PathVariable Long followeeId) {
